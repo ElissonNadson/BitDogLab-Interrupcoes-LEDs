@@ -1,0 +1,18 @@
+
+Link do projeto:
+https://lucid.app/lucidchart/82e0dc6b-ffe3-489f-aaff-381f4c309315/edit?view_items=AomORQOyJPEe&invitationId=inv_2fe3491a-c4ab-437e-906d-66921ba7bc51
+
+Resumo do Projeto
+Este projeto implementa o controle de uma matriz de LEDs WS2812 e um LED RGB utilizando a placa BitDogLab com o microcontrolador RP2040. O sistema faz uso de interrupções (IRQ) para detectar pressionamentos de botões, garantindo baixa latência e alta eficiência.
+
+Funcionamento:
+1️⃣ Inicialização do sistema: Configuração dos botões, do LED RGB e da matriz de LEDs.
+2️⃣ Loop principal:
+
+Pisca o LED vermelho 5 vezes por segundo.
+Exibe um número na matriz de LEDs.
+3️⃣ Interrupções dos botões:
+Botão A ➡️ Incrementa o número exibido.
+Botão B ➡️ Decrementa o número exibido.
+4️⃣ Debouncing: Antes de processar a ação dos botões, o código verifica se o pressionamento é válido, evitando leituras erradas devido ao efeito bouncing.
+5️⃣ Atualização da matriz de LEDs: O número atualizado é exibido na matriz em um formato fixo.

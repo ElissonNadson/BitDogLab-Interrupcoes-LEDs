@@ -41,20 +41,18 @@ Os seguintes componentes estão conectados à placa **BitDogLab**:
 
 
 ## 🔄 Fluxo do Sistema
+![Untitled Diagram (7)](https://github.com/user-attachments/assets/7b70ba6f-d484-4751-b033-ff5212fd04b8)
 
-1. **Inicialização do Sistema**
-   - Configura GPIOs para **botões, LED RGB e Matriz WS2812**.
-   - Define **interrupções (IRQ)** para capturar eventos dos botões.
-   - Aplica **debouncing** para evitar acionamentos errados.
+1️⃣ Inicialização: Configura os botões, a matriz de LEDs e o LED RGB.
+2️⃣ Loop principal:
 
-2. **Loop Principal**
-   - Mantém o LED RGB piscando a cada **200ms**.
-   - Exibe o **número atual** na matriz WS2812.
-   - Aguarda eventos de **interrupção dos botões**.
-
-3. **Tratamento dos Botões**
-   - **Botão A pressionado:** incrementa o número e atualiza a matriz.
-   - **Botão B pressionado:** decrementa o número e atualiza a matriz.
+O LED vermelho pisca 5 vezes por segundo.
+O sistema aguarda um botão ser pressionado.
+3️⃣ Interrupções dos botões:
+Botão A ➡️ Aumenta o número na matriz.
+Botão B ➡️ Diminui o número na matriz.
+4️⃣ Debouncing: Evita leituras erradas dos botões.
+5️⃣ Atualização da matriz: Exibe o novo número.
 
 ---
 
@@ -65,28 +63,35 @@ Os seguintes componentes estão conectados à placa **BitDogLab**:
    ```sh
    git clone https://github.com/ElissonNadson/BitDogLab-Interrupcoes-LEDs
    ```
-2. Abra o projeto no **VS Code** ou no **CLion**.
-3. Configure o ambiente do **Pico SDK**.
-4. Compile o código:
-   ```sh
-   mkdir build && cd build
-   cmake ..
-   make
-   ```
-5. Conecte a **BitDogLab** via USB e envie o binário.
+2. Abra o projeto no **VS Code** 
+3. Certifique-se de que a extensão **Raspberry Pi Pico** e  **Wokwi** estão instaladas e configuradas corretamente.
+4. Clique no ícone da extensão da Pico<br>
+![image](https://github.com/user-attachments/assets/f7f9b698-a829-4ae7-a716-8e7f0a7ed835)
+5. Selecione importar projeto para que a pasta build seja gerada automaticamente:<br>
+  - Selecione o caminho do projeto<br>
+
+![image](https://github.com/user-attachments/assets/776f5db4-1bff-4272-a620-73e931dd6ec3)
+
+
+6. Navegue até a opção Compilar Projeto:<br>
+
+![image](https://github.com/user-attachments/assets/7d19fc93-f11d-463a-9361-b1e6671836b6)
 
 
 ### 🖥️ Testando no Simulador
 Se quiser testar no **Wokwi**, abra o arquivo `diagram.json` e inicie a simulação.
+![image](https://github.com/user-attachments/assets/e0c33157-d348-43fb-800d-320e3dc7025f)
+
 
 ---
 
-## 📹 Demonstração em Vídeo
-📺 **Assista à demonstração do projeto em execução**:
+## 📹 Demonstração em Vídeo  
+📺 **Assista à demonstração do projeto em execução**:  
 
-🔗 [Video da execução no hardware]([https://www.youtube.com/](https://youtu.be/OXyGP3hYkRg))
+[![Demonstração do Projeto](https://img.youtube.com/vi/OXyGP3hYkRg/0.jpg)](https://youtu.be/OXyGP3hYkRg)  
 
-https://youtu.be/OXyGP3hYkRg
+🔗 [Assista no YouTube](https://youtu.be/OXyGP3hYkRg)  
+
 
 ---
 

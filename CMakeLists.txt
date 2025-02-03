@@ -34,34 +34,34 @@ project(BitDogLab-Interrupcoes-LEDs C CXX ASM)
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
-add_executable(BitDogLab-Interrupcoes-LEDs BitDogLab-Interrupcoes-LEDs.c)
+
+add_executable(BitDogLab-Interrupcoes-LEDs BitDogLab-Interrupcoes-LEDs.c )
 
 pico_set_program_name(BitDogLab-Interrupcoes-LEDs "BitDogLab-Interrupcoes-LEDs")
 pico_set_program_version(BitDogLab-Interrupcoes-LEDs "0.1")
 
-# Generate PIO header
-pico_generate_pio_header(BitDogLab-Interrupcoes-LEDs ${CMAKE_CURRENT_LIST_DIR}/blink.pio)
-
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(BitDogLab-Interrupcoes-LEDs 1)
-pico_enable_stdio_usb(BitDogLab-Interrupcoes-LEDs 0)
+pico_enable_stdio_usb(BitDogLab-Interrupcoes-LEDs 1)
 
 # Add the standard library to the build
 target_link_libraries(BitDogLab-Interrupcoes-LEDs
         pico_stdlib
         hardware_pio
-        hardware_timer
-        ws2812
+        hardware_clocks
 )
 
 # Add the standard include files to the build
 target_include_directories(BitDogLab-Interrupcoes-LEDs PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
-        ${CMAKE_CURRENT_LIST_DIR}/ws2812 # Diretório contendo o ws2812.h
 )
 
-# Adicione o diretório onde ws2812.h está localizado
-add_subdirectory(ws2812) # Se a biblioteca precisar ser compilada
+# Compile the ws2812.pio file
+pico_generate_pio_header(BitDogLab-Interrupcoes-LEDs ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio)
+
+# Add any user requested libraries
+target_link_libraries(BitDogLab-Interrupcoes-LEDs 
+        
+        )
 
 pico_add_extra_outputs(BitDogLab-Interrupcoes-LEDs)
-

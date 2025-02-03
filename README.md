@@ -1,47 +1,44 @@
-# 📌 Tarefa: Controle de Matriz de LEDs WS2812 com Interrupções e Debouncing
+# 🚀 BitDogLab - Interrupções e LEDs  
 
-## 📖 Descrição do Projeto
-Este projeto foi desenvolvido para consolidar os conceitos de interrupções em microcontroladores RP2040, utilizando a placa **BitDogLab**. O objetivo é manipular uma matriz de LEDs **WS2812 5x5**, um **LED RGB** e botões configurados com **interrupção e debouncing via software**.
+Este projeto explora o uso de interrupções no microcontrolador **RP2040** utilizando a placa de desenvolvimento **BitDogLab**. O objetivo é controlar LEDs comuns e LEDs endereçáveis **WS2812**, além de implementar o **debouncing** via software para botões de entrada.  
 
-### 🎯 Objetivos do Projeto:
-- Implementar **interrupções** para capturar eventos dos botões.
-- Aplicar **debouncing via software** para evitar leituras erradas.
-- Manipular **LED RGB** e **matriz WS2812** para exibir números de **0 a 9**.
-- Criar um sistema funcional combinando **hardware e software**.
+## 🎯 Objetivos  
+- Compreender o funcionamento e a aplicação de interrupções em microcontroladores.  
+- Implementar **debouncing** para evitar múltiplas leituras ao pressionar botões.  
+- Controlar LEDs RGB e uma matriz de LEDs **WS2812**.  
+- Utilizar **resistores de pull-up internos** nos botões.  
+- Desenvolver um projeto funcional integrando hardware e software.  
 
----
+## 🛠 Componentes Utilizados  
+Os seguintes componentes estão conectados à placa **BitDogLab**:  
 
-## 🛠 Componentes Utilizados
-- **Placa BitDogLab (RP2040)**
-- **Matriz WS2812 (5x5)** conectada à **GPIO 7**
-- **LED RGB** conectado às **GPIOs 11, 12 e 13**
-- **Botão A** (GPIO 5) - Incrementa o número na matriz
-- **Botão B** (GPIO 6) - Decrementa o número na matriz
+| Componente | Conexão |
+|------------|---------|
+| **Matriz 5x5 WS2812** | GPIO 7 |
+| **LED RGB** (Vermelho, Verde, Azul) | GPIOs 11, 12, 13 |
+| **Botão A** | GPIO 5 |
+| **Botão B** | GPIO 6 |
 
----
+## ✨ Funcionalidades Implementadas  
+1. **LED RGB**  
+   - O LED vermelho do **LED RGB** pisca continuamente **5 vezes por segundo**.  
+   
+2. **Matriz WS2812**  
+   - Exibe números de **0 a 9** com efeitos visuais.  
+   - Formato fixo (como segmentos de display de 7 segmentos) ou um estilo criativo, desde que seja legível.  
 
-## 🔧 Funcionalidades Implementadas
-1. **Piscar o LED vermelho** do LED RGB 5 vezes por segundo.
-2. **Botão A** incrementa o número exibido na matriz de LEDs.
-3. **Botão B** decrementa o número exibido na matriz de LEDs.
-4. **Matriz WS2812** exibe os números de **0 a 9** em formato digital (5x5).
-5. **Debouncing via software** para leituras precisas.
-6. **Interrupção (IRQ)** nos botões, evitando polling e otimizando o código.
+3. **Botões com Interrupção e Debouncing**  
+   - **Botão A**: incrementa o número exibido na matriz de LEDs.  
+   - **Botão B**: decrementa o número exibido na matriz de LEDs.  
+   - Ambas as funcionalidades usam **interrupções (IRQ)** e **debouncing via software**.  
 
----
+## 🔧 Requisitos Técnicos  
+1. **Uso de Interrupções:** todas as interações com botões são feitas via **IRQ**.  
+2. **Debouncing via Software:** evita leituras falsas ao pressionar botões.  
+3. **Controle de LEDs:** tanto LEDs comuns quanto **WS2812** são manipulados.  
+4. **Código Bem Estruturado:** organizado e comentado para facilitar o entendimento.  
 
-## 📦 Dependências e Configurações Adicionais
-- Este projeto utiliza a biblioteca **ws2812** para o controle da matriz de LEDs. Certifique-se de que ela esteja incluída e configurada corretamente.
 
----
-
-## 🖥️ Estrutura do Código
-
-```
-
-```
-
----
 
 ## 🔄 Fluxo do Sistema
 
@@ -87,7 +84,9 @@ Se quiser testar no **Wokwi**, abra o arquivo `diagram.json` e inicie a simulaç
 ## 📹 Demonstração em Vídeo
 📺 **Assista à demonstração do projeto em execução**:
 
-🔗 [Video da execução no hardware](https://www.youtube.com/)
+🔗 [Video da execução no hardware]([https://www.youtube.com/](https://youtu.be/OXyGP3hYkRg))
+
+https://youtu.be/OXyGP3hYkRg
 
 ---
 

@@ -3,42 +3,105 @@
 #include "hardware/irq.h"
 #include "pico/time.h"
 #include <stdio.h>
+#include "ws2812.h" // Adicione esta linha
 
-// Nomes claros e descritivos para os pinos
-#define LED_VERMELHO_PIN       11    // LED RGB - componente vermelho
-#define LED_WS2812_PIN         7     // Matriz WS2812
-#define BOTAO_A_PIN            5     // Botão A
-#define BOTAO_B_PIN            6     // Botão B
+#define LED_WS2812_PIN 7
+#define BOTAO_A_PIN    5
+#define BOTAO_B_PIN    6
+#define DEBOUNCE_DELAY_MS 200
+#define NUM_PIXELS 25
 
-#define DEBOUNCE_DELAY_MS 50  // Intervalo de debouncing
+// Matriz de números para exibição
+const double numeros[10][NUM_PIXELS] = {
+    // Numero 0
+    {0.0, 1.0, 1.0, 1.0, 0.0,
+     1.0, 1.0, 0.0, 0.0, 1.0,
+     1.0, 0.0, 1.0, 0.0, 1.0,
+     1.0, 0.0, 0.0, 1.0, 1.0,
+     0.0, 1.0, 1.0, 1.0, 0.0},
+    // Numero 1
+    {0.0, 0.0, 1.0, 0.0, 0.0,
+     0.0, 1.0, 1.0, 0.0, 0.0,
+     0.0, 0.0, 1.0, 0.0, 0.0,
+     0.0, 0.0, 1.0, 0.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0},
+    // Numero 2
+    {0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 0.0, 0.0, 1.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 1.0, 0.0, 0.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0},
+    // Numero 3
+    {0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 0.0, 0.0, 1.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 0.0, 0.0, 1.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0},
+    // Numero 4
+    {0.0, 0.0, 0.0, 1.0, 0.0,
+     0.0, 0.0, 1.0, 1.0, 0.0,
+     0.0, 1.0, 0.0, 1.0, 0.0,
+     1.0, 1.0, 1.0, 1.0, 1.0,
+     0.0, 0.0, 0.0, 1.0, 0.0},
+    // Numero 5
+    {0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 1.0, 0.0, 0.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 0.0, 0.0, 1.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0},
+    // Numero 6
+    {0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 1.0, 0.0, 0.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 1.0, 0.0, 1.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0},
+    // Numero 7
+    {0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 0.0, 0.0, 1.0, 0.0,
+     0.0, 0.0, 1.0, 0.0, 0.0,
+     0.0, 1.0, 0.0, 0.0, 0.0,
+     1.0, 1.0, 1.0, 1.0, 1.0},
+    // Numero 8
+    {0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 1.0, 0.0, 1.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 1.0, 0.0, 1.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0},
+    // Numero 9
+    {0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 1.0, 0.0, 1.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0,
+     0.0, 0.0, 0.0, 1.0, 0.0,
+     0.0, 1.0, 1.0, 1.0, 0.0}
+};
 
-// Variáveis globais com nomes autoexplicativos
-volatile int contador = 0;                   
+volatile int contador = 0;
 volatile absolute_time_t ultimo_debounce_a = {0};
 volatile absolute_time_t ultimo_debounce_b = {0};
 
-// Função para atualizar o display da matriz WS2812 conforme o número
 void atualizar_display_matriz(int numero) {
-    // Conversão do número para o padrão visual desejado na matriz
     printf("Exibindo número: %d\n", numero);
+    for (int i = 0; i < NUM_PIXELS; i++) {
+        if (numeros[numero][i]) {
+            ws2812_set_pixel(i, 255, 255, 255); // Branco
+        } else {
+            ws2812_set_pixel(i, 0, 0, 0); // Desligado
+        }
+    }
+    ws2812_show();
 }
 
-// Função de tratamento de interrupção dos botões
 void tratar_interrupcao_botao(uint gpio, uint32_t eventos) {
+    absolute_time_t agora = get_absolute_time();
     if (gpio == BOTAO_A_PIN) {
-        absolute_time_t agora = get_absolute_time();
         if (absolute_time_diff_us(ultimo_debounce_a, agora) > (DEBOUNCE_DELAY_MS * 1000)) {
             contador = (contador + 1) % 10;
             ultimo_debounce_a = agora;
             atualizar_display_matriz(contador);
         }
     } else if (gpio == BOTAO_B_PIN) {
-        absolute_time_t agora = get_absolute_time();
         if (absolute_time_diff_us(ultimo_debounce_b, agora) > (DEBOUNCE_DELAY_MS * 1000)) {
-            contador = contador - 1;
-            if (contador < 0) {
-                contador = 9;
-            }
+            contador = (contador - 1 + 10) % 10;
             ultimo_debounce_b = agora;
             atualizar_display_matriz(contador);
         }
@@ -47,42 +110,20 @@ void tratar_interrupcao_botao(uint gpio, uint32_t eventos) {
 
 int main() {
     stdio_init_all();
+    ws2812_init(LED_WS2812_PIN);
+    atualizar_display_matriz(contador);
     
-    // Inicializa e configura o LED vermelho (LED RGB)
-    gpio_init(LED_VERMELHO_PIN);
-    gpio_set_dir(LED_VERMELHO_PIN, GPIO_OUT);
-
-    // Inicializa os botões com resistor de pull-up interno
     gpio_init(BOTAO_A_PIN);
     gpio_set_dir(BOTAO_A_PIN, GPIO_IN);
     gpio_pull_up(BOTAO_A_PIN);
-    
     gpio_init(BOTAO_B_PIN);
     gpio_set_dir(BOTAO_B_PIN, GPIO_IN);
     gpio_pull_up(BOTAO_B_PIN);
-
-    // Configura as interrupções dos botões (borda de descida)
+    
     gpio_set_irq_enabled_with_callback(BOTAO_A_PIN, GPIO_IRQ_EDGE_FALL, true, &tratar_interrupcao_botao);
     gpio_set_irq_enabled_with_callback(BOTAO_B_PIN, GPIO_IRQ_EDGE_FALL, true, &tratar_interrupcao_botao);
-
-    // Inicialização da matriz WS2812, se necessário
-    // ...existing code...
-
-    bool led_estado = false;
-    uint64_t tempo_ultimo_blink = to_ms_since_boot(get_absolute_time());
-
+    
     while (1) {
-        uint64_t agora = to_ms_since_boot(get_absolute_time());
-        if (agora - tempo_ultimo_blink >= 100) {
-            led_estado = !led_estado;
-            gpio_put(LED_VERMELHO_PIN, led_estado);
-            tempo_ultimo_blink = agora;
-        }
-        
-        // Se desejar atualizar a matriz continuamente, pode chamar a função; 
-        // caso contrário, a atualização já ocorre na interrupção.
-        // atualizar_display_matriz(contador);
-
         sleep_ms(10);
     }
     return 0;
